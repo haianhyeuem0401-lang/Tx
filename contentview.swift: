@@ -1,0 +1,27 @@
+import SwiftUI
+import WebKit
+
+struct ContentView: View {
+    var body: some View {
+        WebView()
+            .ignoresSafeArea()
+    }
+}
+
+struct WebView: UIViewRepresentable {
+    func makeUIView(context: Context) -> WKWebView {
+        let web = WKWebView()
+        if let url = Bundle.main.url(
+            forResource: "gbao",
+            withExtension: "html"
+        ) {
+            web.loadFileURL(
+                url,
+                allowingReadAccessTo: url.deletingLastPathComponent()
+            )
+        }
+        return web
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {}
+}
