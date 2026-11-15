@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>QBaoTweakxVft Tool · GBao??🦖 DỰ ĐOÁN TÀI XỈU</title>
+<meta name="description" content="Hệ Thống AI Phân Tích Dữ Liệu Thế Hệ Mới">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800;900&display=swap');
+
+:root{
+  color-scheme:dark;
+  --bg:#070b14;
+  --panel:rgba(13,20,34,.88);
+  --panel-2:rgba(18,28,46,.94);
+  --line:rgba(148,173,209,.16);
+  --muted:#8493aa;
+  --text:#edf4ff;
+  --mint:#63f5c5;
+  --mint-2:#1bd6a1;
+  --pink:#ff668b;
+  --gold:#ffd477;
+  --shadow:0 24px 80px rgba(0,0,0,.48);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;min-height:100%;overflow:hidden}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Manrope',sans-serif;user-select:none;-webkit-user-select:none;
+}
+body:before{
+  content:"";position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse at 12% 8%,rgba(42,211,174,.12),transparent 34%),
+             radial-gradient(ellipse at 88% 90%,rgba(73,111,255,.13),transparent 38%);
+}
+.tool-full{position:fixed;inset:0;z-index:1;background:#050810}
+.tool-full iframe{width:100%;height:100%;border:0;display:block}
+
+/* Floating controls */
+.gear.ai-view-btn,.exitbtn{
+  position:fixed;top:15px;z-index:999;min-height:42px;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:0 15px;border-radius:13px;
+  background:rgba(20,24,33,.6);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,100,180,.3);
+  color:#eaf3ff;
+  font:800 11px 'DM Mono',monospace;letter-spacing:1px;
+  text-decoration:none;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.25);
+  transition:transform .2s,border-color .2s,background .2s,box-shadow .2s;
+}
+.gear.ai-view-btn{right:15px;min-width:48px}
+.exitbtn{right:75px;font-family:'Manrope',sans-serif;letter-spacing:.3px;font-size:11px}
+.gear.ai-view-btn:before{content:"";width:7px;height:7px;border-radius:50%;background:#6c7b91;box-shadow:0 0 0 4px rgba(108,123,145,.12)}
+.gear.ai-view-btn.open{background:rgba(25,91,77,.5);border-color:rgba(99,245,197,.55);color:var(--mint);box-shadow:0 0 26px rgba(27,214,161,.15)}
+.gear.ai-view-btn.open:before{background:var(--mint);box-shadow:0 0 12px var(--mint)}
+.exitbtn:hover{border-color:rgba(255,102,139,.6);color:#ff91aa;background:rgba(56,19,35,.9)}
+.exitbtn svg{width:14px;height:14px}
+.gear.ai-view-btn:active,.exitbtn:active,.btn:active{transform:scale(.97)}
+
+#drag-shield{display:none;position:fixed;inset:0;z-index:98;cursor:grabbing}
+#drag-shield.active{display:block}
+
+@keyframes panelIn{from{opacity:0;transform:translateY(-12px) scale(.96)}to{opacity:1;transform:none}}
+
+/* Panel wrapper — Viền hồng nhẹ, trong suốt */
+.panel-float{
+  position:fixed;top:70px;right:14px;z-index:100;
+  width:210px;
+  display:none;
+  cursor:grab;
+  touch-action:none;
+  -webkit-user-select:none;user-select:none;
+  padding:1px;
+  border-radius:24px;
+  background:linear-gradient(135deg, rgba(255,79,163,0.5), rgba(192,66,255,0.3), rgba(79,143,255,0.5));
+  animation:panelIn .22s ease-out both;
+}
+.panel-float.on{display:block}
+.panel-float.dragging{cursor:grabbing}
+.panel-float.dragging{animation:none;background:linear-gradient(135deg, rgba(255,79,163,0.8), rgba(192,66,255,0.6), rgba(79,143,255,0.8))}
+
+/* Card — Xám xám trong suốt (Glassmorphism) */
+.robot-card{
+  position:relative;
+  display:flex;flex-direction:column;align-items:center;
+  gap:0;
+  border-radius:23px;
+  background:rgba(20, 24, 33, 0.7);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  overflow:hidden;
+}
+.robot-card:before{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,100,180,.5),rgba(180,80,255,.5),transparent);
+  z-index:2;
+}
+.robot-card:after{
+  content:"AI CORE";position:absolute;right:10px;top:10px;z-index:3;
+  color:rgba(255,180,220,.15);font:700 7px 'DM Mono',monospace;letter-spacing:2px;
+}
+
+.robot-img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  object-position:center 20%;
+  display:block;
+  pointer-events:none;
+  flex-shrink:0;
+  -webkit-mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);
+}
+
+.robot-info{
+  width:100%;padding:0 13px 13px;
+  display:flex;flex-direction:column;align-items:center;
+  pointer-events:none;
+  margin-top:-15px;
+  position:relative;z-index:1;
+}
+.robot-status{
+  display:flex;align-items:center;gap:5px;margin-bottom:5px;
+  color:var(--mint);font:700 9px 'DM Mono',monospace;letter-spacing:1px;text-transform:uppercase;
+}
+.robot-status:before{
+  content:"";flex-shrink:0;width:5px;height:5px;border-radius:50%;
+  background:currentColor;box-shadow:0 0 7px currentColor;
+}
+.robot-status.warn{color:var(--gold)}.robot-status.err{color:var(--pink)}
+
+.robot-session{
+  font:700 10px 'DM Mono',monospace;color:#9aaec6;
+  margin-bottom:3px;letter-spacing:.3px;text-align:center;
+}
+.robot-prediction{
+  font-size:32px;font-weight:900;line-height:1.05;letter-spacing:1px;
+  margin:1px 0 5px;text-align:center;
+}
+.robot-prediction.tai{
+  color:#3fffc0;
+  text-shadow:0 0 20px rgba(63,255,192,.55),0 0 40px rgba(63,255,192,.2);
+}
+.robot-prediction.xiu{
+  color:#ff5ca8;
+  text-shadow:0 0 20px rgba(255,92,168,.55),0 0 40px rgba(255,92,168,.2);
+}
+.robot-prediction.scan{color:#b0bfd0}
+
+.robot-confidence{
+  font:800 12px 'DM Mono',monospace;color:#e8f4ff;
+  margin-bottom:2px;text-align:center;
+}
+.robot-ratio{
+  font:500 10px 'DM Mono',monospace;color:#7a8faa;
+  margin-bottom:7px;text-align:center;
+}
+.robot-raw{
+  width:100%;padding-top:7px;border-top:1px solid rgba(255,255,255,.08);
+  color:#6b7f96;font:8.5px/1.55 'DM Mono',monospace;word-break:break-word;
+  text-align:left;
+}
+
+@keyframes rainbow{
+  0%  {background-position:0% 50%}
+  50% {background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes shimmer{
+  0%  {opacity:.85;text-shadow:0 0 8px rgba(255,255,255,.4),0 2px 12px #000}
+  50% {opacity:1;  text-shadow:0 0 18px rgba(255,255,255,.8),0 0 32px rgba(255,200,80,.5),0 2px 12px #000}
+  100%{opacity:.85;text-shadow:0 0 8px rgba(255,255,255,.4),0 2px 12px #000}
+}
+.footer{
+  position:fixed;bottom:0;left:0;right:0;z-index:9;
+  padding:7px 10px 9px;text-align:center;pointer-events:none;
+  background:linear-gradient(180deg,transparent 0%,rgba(0,0,0,.72) 40%);
+}
+.footer-brand{
+  display:block;
+  font:900 11px/1.4 'Manrope',sans-serif;letter-spacing:1.2px;
+  text-transform:uppercase;
+  background:linear-gradient(90deg,#ff0080,#ff8c00,#ffe600,#00ff9d,#00cfff,#a855f7,#ff0080);
+  background-size:300% 300%;
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  animation:rainbow 3s linear infinite;
+  text-shadow:none;
+  margin-bottom:3px;
+}
+.footer-cta{
+  display:inline-block;pointer-events:auto;
+  font:900 13px/1.3 'Manrope',sans-serif;letter-spacing:.8px;
+  text-transform:uppercase;
+  color:#fff;
+  text-decoration:none;
+  padding:5px 14px 6px;
+  border-radius:10px;
+  background:linear-gradient(105deg,#ff4d4d,#ff9f0a,#ffd60a,#34c759,#30b0c7,#bf5af2);
+  background-size:300% 300%;
+  animation:rainbow 2.5s linear infinite,shimmer 2s ease-in-out infinite;
+  box-shadow:0 4px 18px rgba(0,0,0,.55),0 0 20px rgba(255,160,30,.25);
+  border:1.5px solid rgba(255,255,255,.25);
+}
+
+/* Modal surfaces */
+.mask{
+  position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:rgba(3,7,14,.78);
+  backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);
+  animation:maskIn .2s ease-out;
+}
+@keyframes maskIn{from{opacity:0}to{opacity:1}}
+.modal{
+  position:relative;width:100%;max-width:410px;max-height:90vh;overflow-y:auto;
+  padding:28px;border:1px solid rgba(128,163,198,.2);border-radius:24px;
+  background:linear-gradient(155deg,rgba(20,31,49,.98),rgba(8,14,26,.99));
+  box-shadow:0 32px 100px rgba(0,0,0,.68),inset 0 1px rgba(255,255,255,.06);
+}
+.modal:before{
+  content:"";position:absolute;top:0;left:28px;right:28px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--mint),#5c9dff,transparent);
+}
+.modal:after{
+  content:"";position:absolute;top:-90px;right:-70px;width:190px;height:190px;
+  border-radius:50%;background:rgba(27,214,161,.08);filter:blur(30px);pointer-events:none;
+}
+h3{position:relative;z-index:1;margin:0 0 10px;text-align:center;color:#f3f7ff;font-size:16px;font-weight:900;letter-spacing:.5px}
+.muted{position:relative;z-index:1;margin:0 0 22px;text-align:center;color:#91a1b8;font-size:11px;line-height:1.7}
+.muted b{display:inline-block;margin-top:8px;padding:7px 10px;border:1px solid rgba(99,245,197,.18);border-radius:9px;background:rgba(99,245,197,.06);color:var(--mint);font:500 10px 'DM Mono',monospace;word-break:break-all}
+.field{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;padding:10px 12px;border:1px solid rgba(148,173,209,.12);border-radius:12px;background:rgba(4,9,18,.5)}
+.lbl{flex:1;color:#aab7ca;font-size:11px;font-weight:700;line-height:1.4}
+.inp{
+  width:135px;min-width:0;padding:10px 11px;border:1px solid rgba(148,173,209,.2);
+  border-radius:9px;outline:none;background:#080e19;color:#f2f7ff;text-align:right;
+  font:500 12px 'DM Mono',monospace;transition:border-color .2s,box-shadow .2s;
+}
+.inp:focus,.key-input-wrap input:focus{border-color:rgba(99,245,197,.7);box-shadow:0 0 0 3px rgba(99,245,197,.09)}
+.btn{
+  display:block;width:100%;padding:13px 15px;border:1px solid rgba(148,173,209,.2);
+  border-radius:12px;background:rgba(255,255,255,.045);color:#e8f0fb;
+  font:800 11px 'Manrope',sans-serif;letter-spacing:.65px;cursor:pointer;
+  transition:transform .18s,border-color .18s,background .18s,box-shadow .18s;
+}
+.btn:hover{border-color:rgba(99,245,197,.55);background:rgba(99,245,197,.07)}
+.btn:active{transform:scale(.985)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-primary{
+  border-color:transparent;background:linear-gradient(105deg,#42e6b7,#7af4d1);
+  color:#062018;box-shadow:0 9px 26px rgba(27,214,161,.17);
+}
+.btn-primary:hover{border-color:transparent;background:linear-gradient(105deg,#69f0c7,#9affdf);box-shadow:0 10px 30px rgba(27,214,161,.25)}
+.mode-btn{display:flex;flex-direction:column;align-items:flex-start;text-align:left;margin-bottom:11px;padding:16px 17px;line-height:1.4}
+.mode-btn small{margin-top:7px;color:#91a1b8;font-size:10px;font-weight:500;line-height:1.6;letter-spacing:0}
+.mode-btn:hover small{color:#c3d0e1}
+.btn-sm{width:auto;padding:10px 14px;font-size:10px}
+
+.key-input-wrap{display:flex;gap:9px;margin-bottom:12px}
+.key-input-wrap input{
+  flex:1;min-width:0;padding:14px 12px;border:1px solid rgba(148,173,209,.2);
+  border-radius:11px;outline:none;background:#080e19;color:#f3f7ff;
+  font:500 11px 'DM Mono',monospace;text-transform:uppercase;transition:.2s;
+}
+.key-input-wrap button{
+  padding:0 15px;border:1px solid rgba(148,173,209,.2);border-radius:11px;
+  background:rgba(255,255,255,.06);color:#dce7f5;font:700 10px 'DM Mono',monospace;
+  cursor:pointer;transition:.2s;
+}
+.key-input-wrap button:hover{border-color:var(--mint);color:var(--mint)}
+#key-msg{min-height:18px;margin-top:13px;text-align:center;font:500 10px/1.5 'DM Mono',monospace}
+
+/* Small screens */
+@media(max-width:600px){
+  .gear.ai-view-btn,.exitbtn{top:10px;min-height:38px;padding:0 12px;border-radius:11px}
+  .gear.ai-view-btn{right:10px}.exitbtn{right:66px}
+  .panel-float{top:56px;right:10px;width:190px}
+  .robot-img{height:140px}
+  .robot-prediction{font-size:27px}
+  .robot-raw{font-size:9px}
+  .modal{padding:24px 19px;border-radius:20px}
+  .footer{bottom:6px;font-size:8px}
+}
+@media(max-height:620px){
+  .modal{max-height:94vh;padding-top:22px;padding-bottom:18px}
+  .muted{margin-bottom:14px}
+  .field{margin-bottom:8px;padding:8px 10px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+/* Refined floating controls */
+.gear.ai-view-btn,
+.exitbtn{
+  position:fixed;top:16px;z-index:999;
+  display:inline-flex;align-items:center;justify-content:center;
+  text-decoration:none;cursor:pointer;outline:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .2s ease,filter .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.gear.ai-view-btn{
+  left:17px;right:auto;top:15px;
+  width:54px;height:54px;min-width:54px;min-height:54px;
+  padding:0;border-radius:50%;
+  color:#fff;background:rgba(20,24,33,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,100,180,.4);
+  box-shadow:0 8px 22px rgba(83,101,220,.20);
+  font:900 17px 'Manrope',sans-serif;letter-spacing:2px;
+  isolation:isolate;overflow:hidden;
+}
+.gear.ai-view-btn:before{
+  content:"";position:absolute;inset:5px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.15);pointer-events:none;
+}
+.gear.ai-view-btn:after{
+  content:"";position:absolute;right:7px;top:7px;width:8px;height:8px;
+  border-radius:50%;background:#c7ffe9;border:2px solid #6879e8;
+  box-shadow:0 0 9px rgba(199,255,233,.9);
+}
+.ai-label{position:relative;z-index:1;transform:translateX(1px)}
+.ai-orbit{
+  position:absolute;width:34px;height:34px;border:1px solid rgba(255,255,255,.20);
+  border-radius:50%;transform:rotate(-28deg) scaleX(1.55);
+  pointer-events:none;
+}
+.gear.ai-view-btn.open{
+  background:rgba(20,24,33,.8);color:#fff;border-color:rgba(255,100,180,.6);
+  box-shadow:0 8px 24px rgba(83,101,220,.24);
+}
+.gear.ai-view-btn:not(.open){
+  background:rgba(30,35,45,.6);
+  box-shadow:0 6px 18px rgba(20,30,48,.2),inset 0 1px 1px rgba(255,255,255,.2);
+}
+.gear.ai-view-btn:not(.open):after{background:#aab5c7;box-shadow:none}
+.exitbtn{
+  top:19px;right:17px;left:auto;
+  min-height:44px;padding:0 18px 0 12px;gap:9px;
+  border-radius:15px;
+  color:#f7f9ff;background:rgba(20,24,33,.7);
+  box-shadow:0 8px 22px rgba(21,29,48,.20),inset 0 1px rgba(255,255,255,.10);
+  font:800 11px 'Manrope',sans-serif;letter-spacing:.8px;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+.exit-icon{
+  width:25px;height:25px;display:grid;place-items:center;
+  border-radius:8px;background:rgba(255,255,255,.10);
+  color:#cbd5ff;flex:0 0 25px;
+}
+.exit-icon svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.exit-label{font-size:11px;letter-spacing:1px}
+.gear.ai-view-btn:hover,.exitbtn:hover{filter:brightness(1.08);transform:translateY(-2px)}
+.gear.ai-view-btn:active,.exitbtn:active{transform:scale(.95)}
+.gear.ai-view-btn:focus-visible,.exitbtn:focus-visible{
+  outline:3px solid rgba(99,245,197,.55);outline-offset:3px;
+}
+@media(max-width:600px){
+  .gear.ai-view-btn{
+    top:12px;left:13px;width:50px;height:50px;min-width:50px;min-height:50px;
+  }
+  .exitbtn{
+    top:15px;right:13px;min-height:42px;padding:0 15px 0 10px;
+    border-radius:14px;
+  }
+  .panel-float{top:74px}
+}
+
+/* Landscape mobile — compact panel */
+@media (orientation: landscape) and (max-height: 650px) {
+  html, body { width:100%; height:100%; min-height:100%; overflow:hidden; }
+  .tool-full { position:fixed; inset:0; }
+  .tool-full iframe { width:100vw; height:100dvh; }
+
+  .gear.ai-view-btn {
+    top:10px; left:12px; width:44px; height:44px;
+    min-width:44px; min-height:44px; font-size:15px;
+  }
+  .exitbtn {
+    top:10px; right:12px; min-height:40px;
+    padding:0 13px 0 9px; border-radius:12px;
+  }
+
+  .panel-float {
+    top:60px; right:12px; left:auto;
+    width:min(340px, 38vw); max-width:38vw;
+    max-height:calc(100dvh - 122px);
+    overflow:auto; overscroll-behavior:contain;
+  }
+  .robot-card {
+    min-height:0; align-items:center; gap:10px;
+    padding:11px 12px; border-radius:16px;
+  }
+  .robot-img { width:48px; height:48px; flex:0 0 48px; border-radius:12px; }
+  .robot-info { min-width:0; margin-top:0; padding:0; }
+  .robot-status { margin-bottom:4px; font-size:10px; }
+  .robot-session { margin-bottom:3px; font-size:12px; }
+  .robot-prediction { margin:3px 0 4px; font-size:19px; }
+  .robot-confidence { margin-bottom:3px; font-size:11px; }
+  .robot-ratio { margin-bottom:4px; font-size:10px; }
+  .robot-raw { font-size:9px; line-height:1.35; }
+  .footer { bottom:5px; font-size:7px; }
+}
+
+/* Short landscape phones */
+@media (orientation: landscape) and (max-height: 430px) {
+  .panel-float { top:56px; width:min(320px,40vw); max-width:40vw; }
+  .robot-card { gap:8px; padding:9px 11px; }
+  .robot-img { width:40px; height:40px; flex-basis:40px; }
+  .robot-status { font-size:9px; margin-bottom:2px; }
+  .robot-session { font-size:10px; }
+  .robot-prediction { font-size:16px; }
+  .robot-confidence,.robot-ratio { font-size:9px; }
+  .robot-raw { font-size:8px; line-height:1.25; }
+}
+
+/* Portrait guidance */
+@media (orientation: portrait) and (max-width: 900px) {
+  body:after {
+    content:"VUI LÒNG XOAY NGANG ĐIỆN THOẠI\A Để hiển thị đầy đủ bàn chơi và bảng AI";
+    white-space:pre-line;
+    position:fixed; inset:0; z-index:20000;
+    display:flex; align-items:center; justify-content:center;
+    padding:28px; text-align:center;
+    color:#eef6ff; font:800 15px/1.9 'Manrope',sans-serif;
+    letter-spacing:1px;
+    background:
+      radial-gradient(ellipse at 50% 35%,rgba(99,245,197,.15),transparent 48%),
+      rgba(4,9,18,.97);
+  }
+  body:before { z-index:19999; }
+}
+</style>
+</head>
+<body class="no-nav dark">
+
+    <div class="tool-full">
+        <iframe id="game-frame" src="https://lc79b.bet/" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+    </div>
+
+    <button class="gear ai-view-btn open" title="Bật/tắt bảng AI" id="btn-toggle-ai" type="button" aria-label="Ẩn hoặc hiện bảng AI" aria-pressed="true">
+        <span class="ai-orbit" aria-hidden="true"></span><span class="ai-label">AI</span>
+    </button>
+    <a class="btn btn-sm exitbtn" href="#" id="btn-logout" aria-label="Thoát khỏi tài khoản">
+        <span class="exit-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M10 4H6.8A2.8 2.8 0 0 0 4 6.8v10.4A2.8 2.8 0 0 0 6.8 20H10" />
+                <path d="M14 8l4 4-4 4M18 12H9" />
+            </svg>
+        </span>
+        <span class="exit-label">Thoát</span>
+    </a>
+
+    <div id="drag-shield"></div>
+    <div class="panel-float ai-robot-panel on" id="ai-panel">
+        <div class="robot-card" id="robot-card">
+            <img class="robot-img" src="https://aibcr.me/images/robot_login.gif" alt="AI Robot">
+            <div class="robot-info">
+                <div id="robotStatus" class="robot-status warn">Chưa kích hoạt key</div>
+                <div id="robotSession" class="robot-session">Phiên hiện tại: #------</div>
+                <div id="robotPrediction" class="robot-prediction scan">Dự đoán: SCAN...</div>
+                <div id="robotConfidence" class="robot-confidence">Độ tin cậy: --%</div>
+                <div id="robotRatio" class="robot-ratio">Tài: --%  |  Xỉu: --%</div>
+                <div id="robotRaw" class="robot-raw">9-MODEL ENGINE · Nhập key để kích hoạt...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal chọn chế độ -->
+    <div class="mask" id="modeModal" style="display:none;">
+        <div class="modal mode-box">
+            <div id="modeChoice">
+                <h3>BẠN MUỐN CHẠY CHẾ ĐỘ NÀO?</h3>
+                <p class="muted">Key đã kích hoạt. Chọn cách bạn muốn AI đồng hành.</p>
+                <button class="btn btn-primary mode-btn" onclick="showCapForm()">DỰ ĐOÁN + QUẢN LÝ VỐN<small>Nhập vốn hiện tại, mục tiêu đánh lên, rủi ro mỗi tay và mức lỗ dừng</small></button>
+                <button class="btn mode-btn" onclick="selectPlainMode()">DỰ ĐOÁN THÔNG THƯỜNG<small>Chỉ xem dự đoán, không quản lý vốn</small></button>
+            </div>
+            <div id="capForm" style="display:none">
+                <h3>THIẾT LẬP AI QUẢN LÝ VỐN</h3>
+                <p class="muted">Nhập 4 thông số chính để AI tính cược mỗi tay và điểm dừng lỗ.</p>
+                <div class="field"><span class="lbl">Số vốn hiện tại (đ)</span><input class="inp" id="capCurrent" type="number" value="1000000" min="1000" step="10000"></div>
+                <div class="field"><span class="lbl">Mục tiêu đánh lên (đ)</span><input class="inp" id="capTarget" type="number" value="1500000" min="10000" step="10000"></div>
+                <div class="field"><span class="lbl">Rủi ro mỗi tay (% vốn)</span><input class="inp" id="capRisk" type="number" value="3" min="1" max="15"></div>
+                <div class="field"><span class="lbl">Lỗ bao nhiêu % thì dừng</span><input class="inp" id="capStop" type="number" value="20" min="5" max="90"></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:8px" onclick="saveCapConfig()">LƯU & BẮT ĐẦU</button>
+                <button class="btn btn-sm" style="width:100%;margin-top:8px" onclick="selectPlainMode()">Bỏ qua, chỉ dự đoán</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Login -->
+    <div class="mask" id="loginModal" style="display:none;">
+        <div class="modal">
+            <h3>KÍCH HOẠT HỆ THỐNG</h3>
+            <p class="muted">Nhập Key để mở khóa AI dự đoán<br><b id="hwid-display">TX-XXXX-XXXX</b></p>
+            <div class="key-input-wrap">
+                <input type="text" id="key-inp" placeholder="VIP-XXXXXXXX-XXXX-XXXX" autocomplete="off">
+                <button id="key-paste" type="button">DÁN</button>
+            </div>
+            <button class="btn btn-primary" id="key-sub">KÍCH HOẠT</button>
+            <div id="key-msg"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span class="footer-brand">QBaoTweakxVft Tool · GBao??🦖 Tool Txiu Vip 2026 By Admin Gbao</span>
+        <a class="footer-cta" href="https://t.me/QBaoTweakxVft_King" target="_blank" rel="noopener">MUA TOOL / KEY TOOL &nbsp;IB : @QBaoTweakxVft_King</a>
+    </div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   FIREBASE CONFIG
+   ============================================================ */
+const FIREBASE_URL = "https://dmcmcmc-default-rtdb.asia-southeast1.firebasedatabase.app";
+const PATH_TX_KEYS = "tx_keys";
+
+/* ============================================================
+   ANTI-DEBUG
+   ============================================================ */
+const _UA = navigator.userAgent || '';
+const _IS_WEBVIEW = /FBAN|FBAV|Instagram|Zalo|Line|WhatsApp|Messenger|CriOS|wv\)/i.test(_UA);
+const _IS_MOBILE = /Android|iPhone|iPad|iPod|Mobile/i.test(_UA) || ('ontouchstart' in window && window.innerWidth < 1024);
+const _IS_DESKTOP = !_IS_MOBILE && !_IS_WEBVIEW;
+
+let _tampered = false;
+let _secStrikes = 0;
+let _secLocked = false;
+let _secLastStrike = 0;
+const _SEC_MAX_STRIKES = 3;
+const _SEC_DECAY_MS = 45000;
+
+function _secFire(reason) {
+    if (_secLocked) return;
+    if (!_IS_DESKTOP && reason.indexOf('HOTKEY_') !== 0) return;
+    const now = Date.now();
+    if (now - _secLastStrike > _SEC_DECAY_MS) _secStrikes = 0;
+    _secStrikes++;
+    _secLastStrike = now;
+    _tampered = true;
+    if (_secStrikes >= _SEC_MAX_STRIKES) {
+        _secLocked = true;
+        try { LS.del(_0x4a.sk); } catch (e) {}
+        try { LS.del(LS_KEY + '_state'); } catch (e) {}
+        const panel = document.getElementById('ai-panel');
+        if (panel) {
+            panel.innerHTML = '<div style="padding:20px;text-align:center;color:#dc2626;font-family:monospace;font-size:12px;letter-spacing:2px;background:#0d0f16;border-radius:12px;border:1px solid #2a0f0f;">' +
+                '⛔ SECURITY LOCK<br><span style="color:#666;font-size:10px;display:block;margin-top:8px;">reason: ' + reason + '</span>' +
+                '<button onclick="location.reload()" style="margin-top:14px;padding:8px 16px;background:#dc2626;color:#fff;border:none;border-radius:4px;font:700 11px monospace;cursor:pointer;">RELOAD</button></div>';
+        }
+        isAuthenticated = false;
+        if (engineInterval) clearInterval(engineInterval);
+        return;
+    }
+    try { console.clear(); } catch (e) {}
+}
+
+(function () {
+    const blocked = (e) => {
+        const k = (e.key || '').toUpperCase();
+        const ctrl = e.ctrlKey || e.metaKey;
+        const shift = e.shiftKey;
+        if (k === 'F12' || k === 'F11') return 'F12';
+        if (ctrl && shift && 'IJCMEKS'.indexOf(k) !== -1) return 'CTRL_SHIFT_' + k;
+        if (ctrl && 'USP'.indexOf(k) !== -1) return 'CTRL_' + k;
+        return null;
+    };
+    document.addEventListener('keydown', function (e) {
+        const r = blocked(e);
+        if (r) { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); _secFire('HOTKEY_' + r); return false; }
+    }, true);
+})();
+document.addEventListener('contextmenu', e => { e.preventDefault(); return false; }, true);
+if (_IS_DESKTOP) {
+    document.addEventListener('selectstart', e => e.preventDefault(), true);
+    document.addEventListener('dragstart', e => e.preventDefault(), true);
+}
+
+function _secProbe() {
+    if (_secLocked || !_IS_DESKTOP) return;
+    const t0 = performance.now();
+    try {
+        (function () { return false; })['constructor']('debugger')();
+    } catch (e) {}
+    if (performance.now() - t0 > 180) _secFire('DEBUGGER_TIMING');
+    const dw = window.outerWidth - window.innerWidth;
+    const dh = window.outerHeight - window.innerHeight;
+    if (dw > 200 || dh > 200) _secFire('WINDOW_SIZE');
+    try {
+        const p = {};
+        Object.defineProperty(p, 'id', { get: function () { _secFire('CONSOLE_GETTER'); return 'x'; }, configurable: false });
+        console.log(p);
+    } catch (e) {}
+    try { if (!Function.prototype.toString.toString().includes('[native code]')) _secFire('TOSTRING_HIJACK'); } catch (e) {}
+    try {
+        const re = /zx/;
+        let fired = false;
+        re.toString = function () { fired = true; return 'zx'; };
+        console.log(re);
+        if (fired) _secFire('REGEX_TOSTRING');
+    } catch (e) {}
+}
+(function loop() {
+    if (_secLocked) return;
+    _secProbe();
+    setTimeout(loop, 900 + Math.random() * 700);
+})();
+if (_IS_DESKTOP) window.addEventListener('resize', () => setTimeout(_secProbe, 150));
+
+/* ============================================================
+   OBFUSCATION
+   ============================================================ */
+const _K = 0x5A;
+const _dec = (arr) => arr.map(c => String.fromCharCode(c ^ _K)).join('');
+const _enc = (str) => Array.from(str).map(c => c.charCodeAt(0) ^ _K);
+const _U_SESS = _dec(_enc('https://wtxmd52.tele68.com/v1/txmd5/sessions'));
+const _U_LITE = _dec(_enc('https://wtxmd52.tele68.com/v1/txmd5/lite-sessions'));
+const _U_GAME = _dec(_enc('https://lc79b.bet/'));
+
+const _mem = {};
+const LS = {
+    get(k) { try { return localStorage.getItem(k); } catch (e) { return _mem[k] ?? null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch (e) { _mem[k] = v; } },
+    del(k) { try { localStorage.removeItem(k); } catch (e) { delete _mem[k]; } }
+};
+
+/* ============================================================
+   KEY AUTH
+   ============================================================ */
+const _0x4a = (function () {
+    const _d = [78,69,79,78,95,84,88,95,50,48,50,54,95,66,75,65,78,71];
+    const _k = [95,95,116,120,95,110,101,111,110,95,97,117,116,104,95,107,101,121];
+    const _t = [[86,73,80],[80,82,79],[77,65,88],[71,79,76,68]];
+    const _p = [80,69,82,77];
+    const _s = (a) => a.map(c => String.fromCharCode(c)).join('');
+    const _h = (str) => {
+        let h = 0 | 0;
+        for (let i = 0; i < str.length; i++) h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+        return (h < 0 ? -h : h).toString(36);
+    };
+    const _chk = (a, b, c) => _h('' + a + b + c + _s(_d)).substring(0, 4).toUpperCase();
+    return { sk: _s(_k), types: _t.map(_s), perm: _s(_p), chk: _chk };
+})();
+
+function parseAndValidate(key) {
+    if (!key || typeof key !== 'string') return { ok: false, msg: 'Vui lòng nhập Key' };
+    key = key.trim().toUpperCase().replace(/\s+/g, '');
+    const parts = key.split('-');
+    if (parts.length !== 4) return { ok: false, msg: 'Sai định dạng (TYPE-RAND-EXP-CHECK)' };
+    const [type, rand, expCode, check] = parts;
+    if (_0x4a.types.indexOf(type) < 0) return { ok: false, msg: 'Loại Key không hợp lệ' };
+    if (!rand || rand.length < 4 || !expCode || check.length !== 4) return { ok: false, msg: 'Mã Key không hợp lệ' };
+    if (_0x4a.chk(type, rand, expCode) !== check) return { ok: false, msg: 'Key giả hoặc sai Checksum' };
+    let expiryTs = 0, isPerm = false;
+    if (expCode === _0x4a.perm) { isPerm = true; }
+    else {
+        const sec = parseInt(expCode, 36);
+        if (isNaN(sec) || sec <= 0) return { ok: false, msg: 'Lỗi thời hạn Key' };
+        expiryTs = sec * 1000;
+        if (Date.now() > expiryTs) return { ok: false, msg: 'Key đã hết hạn' };
+    }
+    return {
+        ok: true, type, key, isPerm, expiryTs,
+        expiryText: isPerm ? 'Vĩnh viễn' : new Date(expiryTs).toLocaleString('vi-VN')
+    };
+}
+
+/* ============================================================
+   HWID + FIREBASE
+   ============================================================ */
+function getTxHWID() {
+    let saved = LS.get('zx_tx_hwid');
+    if (saved && /^TX-[A-Z0-9-]{12,100}$/.test(saved)) return saved;
+    try {
+        const id = (crypto && crypto.randomUUID)
+            ? crypto.randomUUID().replace(/-/g, '').toUpperCase()
+            : Array.from(crypto.getRandomValues(new Uint8Array(20)), b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+        saved = 'TX-' + id;
+    } catch (_) {
+        throw new Error('Trình duyệt không hỗ trợ Web Crypto để tạo mã thiết bị.');
+    }
+    LS.set('zx_tx_hwid', saved);
+    return saved;
+}
+
+async function secureFetch(url, options = {}, timeoutMs = 10000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        return await fetch(url, { ...options, signal: controller.signal, cache: 'no-store' });
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+async function validateAgainstFirebase(key, hwid) {
+    const url = FIREBASE_URL + '/' + PATH_TX_KEYS + '/' + encodeURIComponent(key) + '.json';
+    try {
+        const res = await secureFetch(url, { headers: { 'X-Firebase-ETag': 'true' } }, 10000);
+        if (!res.ok) {
+            return { ok: false, source: 'firebase-error', msg: 'Không xác minh được Key trên Firebase (HTTP ' + res.status + '). Hãy thử lại.' };
+        }
+        const data = await res.json();
+        if (!data || typeof data !== 'object') {
+            return { ok: false, source: 'firebase-missing', msg: 'Key không tồn tại trên Firebase.' };
+        }
+        if (data.banned === true) {
+            return { ok: false, msg: '⛔ Key đã bị BAN' + (data.banned_reason ? ' (' + String(data.banned_reason).slice(0, 120) + ')' : '') };
+        }
+
+        const now = Date.now();
+        if (data.hwid && data.hwid !== hwid) {
+            return { ok: false, msg: '⛔ Key đã kích hoạt trên thiết bị khác.' };
+        }
+        if (data.expires_at && Number(data.expires_at) > 0 && Number(data.expires_at) < now) {
+            return { ok: false, msg: '⛔ Key đã hết hạn trên server.' };
+        }
+
+        if (!data.hwid) {
+            const expCode = data.expCode || '';
+            let expiresAt = 0;
+            if (expCode && expCode !== 'PERM') {
+                const sec = parseInt(expCode, 36);
+                if (!Number.isFinite(sec) || sec <= 0) {
+                    return { ok: false, msg: 'Dữ liệu thời hạn Key trên Firebase không hợp lệ.' };
+                }
+                expiresAt = sec * 1000;
+            }
+            const etag = res.headers.get('ETag');
+            if (!etag) {
+                return { ok: false, msg: 'Firebase không trả ETag; từ chối kích hoạt để tránh ghi đè dữ liệu.' };
+            }
+            const updated = { ...data, hwid, activated_at: now, expires_at: expiresAt };
+            const write = await secureFetch(url, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'if-match': etag },
+                body: JSON.stringify(updated)
+            }, 10000);
+            if (write.status === 412) {
+                return { ok: false, msg: 'Key vừa được thiết bị khác kích hoạt. Tải lại và thử lại.' };
+            }
+            if (!write.ok) {
+                return { ok: false, msg: 'Firebase từ chối ghi kích hoạt (HTTP ' + write.status + '). Kiểm tra Security Rules.' };
+            }
+            const verified = await secureFetch(url, {}, 10000);
+            if (!verified.ok) return { ok: false, msg: 'Không thể xác nhận trạng thái kích hoạt sau khi ghi.' };
+            const finalData = await verified.json();
+            if (!finalData || finalData.hwid !== hwid || finalData.banned === true) {
+                return { ok: false, msg: 'Không xác minh được kết quả kích hoạt trên Firebase.' };
+            }
+            return { ok: true, source: 'firebase-activated', expiresAt };
+        }
+        return { ok: true, source: 'firebase', expiresAt: Number(data.expires_at) || 0 };
+    } catch (e) {
+        const reason = e && e.name === 'AbortError' ? 'Firebase hết thời gian phản hồi.' : 'Không thể kết nối Firebase.';
+        return { ok: false, source: 'firebase-error', msg: reason + ' Xác thực bị từ chối khi offline.' };
+    }
+}
+
+function getSavedAuth() {
+    try {
+        const raw = LS.get(_0x4a.sk);
+        if (!raw) return null;
+        const res = parseAndValidate(JSON.parse(raw).key);
+        if (!res.ok) { LS.del(_0x4a.sk); return null; }
+        return res;
+    } catch (e) { return null; }
+}
+
+/* ============================================================
+   CONFIG & STATE
+   ============================================================ */
+const LS_KEY = 'zx_md5_html_v4';
+const DEFAULT_CFG = { gameUrl: _U_GAME, sessions: _U_SESS, lite: _U_LITE, token: '' };
+let CFG = { ...DEFAULT_CFG };
+try { const s = LS.get(LS_KEY + '_cfg'); if (s) CFG = { ...CFG, ...JSON.parse(s) }; } catch (e) {}
+
+let isAuthenticated = false, authInfo = null, engineInterval = null;
+let trackedSessionId = 0, currentPrediction = -1;
+let wins = 0, loses = 0, lossStreak = 0, winStreak = 0, restCounter = 0;
+let history = [];
+let betMode = null;
+let capConfig = null;
+
+try {
+    const bm = LS.get('zx_bet_mode');
+    if (bm) betMode = bm;
+    const cc = LS.get('zx_cap_config');
+    if (cc) capConfig = JSON.parse(cc);
+} catch (e) {}
+
+const $ = (id) => document.getElementById(id);
+const gameFrame = $('game-frame');
+
+function fmt(n) {
+    if (n === undefined || n === null || isNaN(n)) return '—';
+    return Math.round(n).toLocaleString('vi-VN');
+}
+
+function saveState() {
+    LS.set(LS_KEY + '_state', JSON.stringify({
+        trackedSessionId, wins, loses, lossStreak, winStreak, restCounter, history: history.slice(0, 150)
+    }));
+}
+(function loadState() {
+    try {
+        const s = LS.get(LS_KEY + '_state');
+        if (!s) return;
+        const o = JSON.parse(s);
+        trackedSessionId = o.trackedSessionId || 0;
+        wins = o.wins || 0; loses = o.loses || 0;
+        lossStreak = o.lossStreak || 0; winStreak = o.winStreak || 0;
+        restCounter = o.restCounter || 0;
+        history = Array.isArray(o.history) ? o.history : [];
+    } catch (e) {}
+})();
+
+/* ============================================================
+   DRAG LOGIC
+   ============================================================ */
+function initDrag() {
+    const el = $('ai-panel');
+    const shield = document.getElementById('drag-shield');
+
+    function snap() {
+        const r = el.getBoundingClientRect();
+        el.style.right = 'auto';
+        el.style.bottom = 'auto';
+        el.style.left = r.left + 'px';
+        el.style.top = r.top + 'px';
+        el.style.animation = 'none';
+    }
+
+    try {
+        const p = JSON.parse(LS.get('zx_panel_pos') || 'null');
+        if (p && typeof p.x === 'number') {
+            el.style.right = 'auto';
+            el.style.bottom = 'auto';
+            el.style.left = Math.max(4, Math.min(window.innerWidth - 230, p.x)) + 'px';
+            el.style.top = Math.max(4, Math.min(window.innerHeight - 100, p.y)) + 'px';
+            el.style.animation = 'none';
+        }
+    } catch(_) {}
+
+    let active = false;
+    let sx = 0, sy = 0, ox = 0, oy = 0;
+
+    function clamp(val, lo, hi){ return Math.max(lo, Math.min(hi, val)); }
+
+    function startDrag(cx, cy) {
+        snap();
+        const r = el.getBoundingClientRect();
+        ox = r.left; oy = r.top;
+        sx = cx; sy = cy;
+        active = true;
+        el.classList.add('dragging');
+        shield.classList.add('active');
+    }
+
+    function moveDrag(cx, cy) {
+        if (!active) return;
+        const w = el.offsetWidth || 220;
+        const h = el.offsetHeight || 280;
+        const nlx = clamp(ox + cx - sx, 4, window.innerWidth - w - 4);
+        const nly = clamp(oy + cy - sy, 4, window.innerHeight - h - 4);
+        el.style.left = nlx + 'px';
+        el.style.top = nly + 'px';
+    }
+
+    function endDrag() {
+        if (!active) return;
+        active = false;
+        el.classList.remove('dragging');
+        shield.classList.remove('active');
+        LS.set('zx_panel_pos', JSON.stringify({
+            x: parseFloat(el.style.left),
+            y: parseFloat(el.style.top)
+        }));
+    }
+
+    el.addEventListener('mousedown', function(e) {
+        if (e.button !== 0) return;
+        if (e.target.closest('button,a,input,select,textarea')) return;
+        e.preventDefault();
+        startDrag(e.clientX, e.clientY);
+    });
+    document.addEventListener('mousemove', function(e) {
+        if (!active) return;
+        moveDrag(e.clientX, e.clientY);
+    });
+    document.addEventListener('mouseup', function() { endDrag(); });
+
+    el.addEventListener('touchstart', function(e) {
+        if (e.touches.length !== 1) return;
+        if (e.target.closest('button,a,input,select,textarea')) return;
+        e.preventDefault();
+        e.stopPropagation();
+        startDrag(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+
+    document.addEventListener('touchmove', function(e) {
+        if (!active) return;
+        if (e.cancelable) e.preventDefault();
+        moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+
+    document.addEventListener('touchend', function() { endDrag(); });
+    document.addEventListener('touchcancel', function() { endDrag(); });
+
+    window.addEventListener('resize', function() {
+        if (!el.style.left) return;
+        const w = el.offsetWidth || 220, h = el.offsetHeight || 280;
+        el.style.left = clamp(parseFloat(el.style.left), 4, window.innerWidth - w - 4) + 'px';
+        el.style.top = clamp(parseFloat(el.style.top), 4, window.innerHeight - h - 4) + 'px';
+    });
+}
+
+/* ============================================================
+   UI UPDATERS
+   ============================================================ */
+function setStatus(text, cls) {
+    const el = $('robotStatus');
+    if (el) {
+        el.textContent = text;
+        el.className = 'robot-status' + (cls ? ' ' + cls : '');
+    }
+}
+
+function updatePanel(ens, models, ent, st, pattern, id) {
+    const sessEl = $('robotSession');
+    if (sessEl) sessEl.textContent = 'Phiên hiện tại: #' + (id ? id + 1 : '------');
+
+    const predEl = $('robotPrediction');
+    const confTxt = $('robotConfidence');
+    const ratioTxt = $('robotRatio');
+    const rawEl = $('robotRaw');
+
+    let predClass = 'scan';
+    let predText = 'Dự đoán: SCAN...';
+    let confVal = 0;
+    let taiPct = 50;
+    let xiuPct = 50;
+    let agreeCount = 0;
+    let nullCount = 0;
+
+    if (ens && ens.pred !== -1) {
+        predClass = ens.pred === 1 ? 'tai' : 'xiu';
+        predText = 'Dự đoán: ' + (ens.pred === 1 ? 'TÀI' : 'XỈU');
+        confVal = ens.conf;
+        agreeCount = ens.taiCount + ens.xiuCount;
+        nullCount = ens.nullCount;
+
+        const total = agreeCount;
+        if (total > 0) {
+            taiPct = Math.round(ens.taiCount / total * 100);
+            xiuPct = 100 - taiPct;
+        }
+    } else if (ens) {
+        agreeCount = ens.taiCount + ens.xiuCount;
+        nullCount = ens.nullCount;
+    }
+
+    predEl.textContent = predText;
+    predEl.className = 'robot-prediction ' + predClass;
+
+    confTxt.textContent = 'Độ tin cậy: ' + (confVal > 0 ? confVal + '%' : '--%');
+    ratioTxt.textContent = `Tài: ${taiPct}%  |  Xỉu: ${xiuPct}%`;
+
+    const timeStr = new Date().toLocaleTimeString('vi-VN', { hour12: false });
+    let capInfo = '';
+
+    if (betMode === 'manage' && capConfig) {
+        const stake = Math.round(capConfig.current * capConfig.risk / 100);
+        const stopAt = Math.round(capConfig.current * (1 - capConfig.stop / 100));
+        capInfo = `Cược ${fmt(stake)}đ · Dừng lỗ ${fmt(stopAt)}đ · Mục tiêu ${fmt(capConfig.target)}đ`;
+    } else {
+        const wr = (wins + loses > 0) ? Math.round(wins / (wins + loses) * 100) : 0;
+        capInfo = `Thực chiến ${wins}/${wins + loses} phiên (${wr}%)`;
+    }
+
+    const agreeStr = ens ? `${agreeCount}/9 đồng thuận` + (nullCount ? ` (${nullCount} skip)` : '') : 'Đang quét';
+    const patternStr = pattern || 'CẦU ĐA BIẾN';
+    const stStr = st || 'IDLE';
+    const entStr = (ent !== undefined && !isNaN(ent)) ? 'H=' + ent.toFixed(2) : 'H=--';
+
+    rawEl.textContent = `DEEP BRAIN v26 · 9-MODEL · ${agreeStr} · ${patternStr} · trạng thái: ${stStr} · ${entStr} · ${capInfo} · ${timeStr}`;
+}
+
+/* ============================================================
+   UI EVENTS
+   ============================================================ */
+$('btn-toggle-ai').onclick = function () {
+    const panel = $('ai-panel');
+    if (panel.classList.contains('on')) {
+        panel.classList.remove('on');
+        this.classList.remove('open');
+    } else {
+        panel.classList.add('on');
+        this.classList.add('open');
+    }
+};
+
+$('btn-logout').onclick = function (e) {
+    e.preventDefault();
+    if (!confirm('Đăng xuất khỏi thiết bị này?\nKey vẫn giữ nguyên HWID — muốn đổi máy cần admin reset.')) return;
+    LS.del(_0x4a.sk);
+    isAuthenticated = false;
+    authInfo = null;
+    $('ai-panel').classList.remove('on');
+    $('btn-toggle-ai').classList.remove('open');
+    openLoginModal();
+};
+
+function showModeModal() {
+    $('modeModal').style.display = 'flex';
+    $('modeChoice').style.display = 'block';
+    $('capForm').style.display = 'none';
+}
+function showCapForm() {
+    $('modeChoice').style.display = 'none';
+    $('capForm').style.display = 'block';
+    if (capConfig) {
+        $('capCurrent').value = capConfig.current || 1000000;
+        $('capTarget').value = capConfig.target || 1500000;
+        $('capRisk').value = capConfig.risk || 3;
+        $('capStop').value = capConfig.stop || 20;
+    }
+}
+function selectPlainMode() {
+    betMode = 'plain';
+    LS.set('zx_bet_mode', 'plain');
+    closeModal();
+    updatePanel(null, null, undefined, null, null, trackedSessionId);
+}
+function saveCapConfig() {
+    const cur = parseFloat($('capCurrent').value) || 0;
+    const tgt = parseFloat($('capTarget').value) || 0;
+    const risk = parseFloat($('capRisk').value) || 3;
+    const stop = parseFloat($('capStop').value) || 20;
+    if (cur < 1000) { alert('Vốn tối thiểu 1.000đ'); return; }
+    if (tgt <= cur) { alert('Mục tiêu phải lớn hơn vốn hiện tại'); return; }
+    if (risk < 1 || risk > 15) { alert('Rủi ro phải từ 1% đến 15%'); return; }
+    if (stop < 5 || stop > 90) { alert('Dừng lỗ phải từ 5% đến 90%'); return; }
+    capConfig = { current: cur, target: tgt, risk, stop };
+    betMode = 'manage';
+    LS.set('zx_bet_mode', 'manage');
+    LS.set('zx_cap_config', JSON.stringify(capConfig));
+    closeModal();
+    updatePanel(null, null, undefined, null, null, trackedSessionId);
+}
+function closeModal() { $('modeModal').style.display = 'none'; }
+window.showCapForm = showCapForm;
+window.selectPlainMode = selectPlainMode;
+window.saveCapConfig = saveCapConfig;
+window.closeModal = closeModal;
+
+/* ============================================================
+   LOGIN MODAL
+   ============================================================ */
+function openLoginModal() {
+    $('loginModal').style.display = 'flex';
+    $('hwid-display').textContent = getTxHWID();
+    const inp = $('key-inp');
+    const msg = $('key-msg');
+    inp.value = '';
+    msg.textContent = '';
+
+    $('key-paste').onclick = async () => {
+        try {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+                const txt = await navigator.clipboard.readText();
+                if (txt && txt.trim()) {
+                    inp.value = txt.trim().toUpperCase();
+                    inp.focus();
+                    return;
+                }
+            }
+            inp.focus();
+            msg.style.color = '#ffd700';
+            msg.textContent = 'Bấm giữ vào ô để dán';
+        } catch (e) {
+            inp.focus();
+            msg.style.color = '#ffd700';
+            msg.textContent = 'Bấm giữ vào ô để dán';
+        }
+    };
+
+    inp.addEventListener('paste', (e) => {
+        const cd = e.clipboardData || window.clipboardData;
+        if (cd) {
+            const txt = cd.getData('text');
+            if (txt) { e.preventDefault(); inp.value = txt.trim().toUpperCase(); }
+        }
+    });
+
+    const submit = async () => {
+        const res = parseAndValidate(inp.value);
+        if (!res.ok) {
+            msg.style.color = '#ff3d7f';
+            msg.textContent = '✗ ' + res.msg;
+            return;
+        }
+        const btn = $('key-sub');
+        btn.disabled = true;
+        btn.textContent = 'ĐANG KIỂM TRA...';
+        msg.style.color = '#ffd700';
+        msg.textContent = '⏳ Kết nối cloud...';
+
+        const hwid = getTxHWID();
+        const fb = await validateAgainstFirebase(res.key, hwid);
+
+        if (!fb.ok) {
+            btn.disabled = false;
+            btn.textContent = 'KÍCH HOẠT';
+            msg.style.color = '#ff3d7f';
+            msg.textContent = '✗ ' + fb.msg;
+            return;
+        }
+
+        LS.set(_0x4a.sk, JSON.stringify({ key: res.key }));
+        authInfo = res;
+        isAuthenticated = true;
+        msg.style.color = '#00ffae';
+        const srcLabel = fb.source === 'firebase-activated' ? 'cloud ✓ (lần đầu)' : 'cloud ✓';
+        msg.textContent = '✓ OK · ' + srcLabel;
+
+        // Bỏ setTimeout để tránh bị treo trên các webview (Zalo, FB, Messenger)
+        try {
+            $('loginModal').style.display = 'none';
+            $('ai-panel').classList.add('on');
+            $('btn-toggle-ai').classList.add('open');
+            if (!betMode) showModeModal();
+            startKeyWatcher();
+            tick();
+        } catch (err) {
+            console.error('Transition error:', err);
+            // Nếu có lỗi gì vẫn đảm bảo ẩn modal
+            $('loginModal').style.display = 'none';
+        }
+    };
+    $('key-sub').onclick = submit;
+    $('key-sub').disabled = false;
+    $('key-sub').textContent = 'KÍCH HOẠT';
+    inp.onkeydown = (e) => { if (e.key === 'Enter') submit(); };
+}
+
+/* ============================================================
+   9-MODEL ENGINE
+   ============================================================ */
+function shannonEntropy(bits) {
+    const n = Math.min(bits.length, 14);
+    if (n === 0) return 0;
+    const p = bits.slice(0, n).filter(x => x === 1).length / n;
+    if (p === 0 || p === 1) return 0;
+    return -(p * Math.log2(p) + (1 - p) * Math.log2(1 - p));
+}
+function resultOf(node) {
+    const s = (node.dice1 || 0) + (node.dice2 || 0) + (node.dice3 || 0);
+    if (s === 0 && node.resultTruyenThong) return String(node.resultTruyenThong).toUpperCase().includes('TAI') ? 1 : 0;
+    if (node.result) { const r = String(node.result).toUpperCase(); return (r.includes('TAI') || r === 'T') ? 1 : 0; }
+    return s > 10 ? 1 : 0;
+}
+function modelMarkov1(h) {
+    const last = h[0];
+    const chrono = h.slice().reverse();
+    let c00 = 1, c01 = 1, c10 = 1, c11 = 1;
+    for (let i = 0; i < chrono.length - 1; i++) {
+        const a = chrono[i], b = chrono[i + 1];
+        if (a === 0 && b === 0) c00++;
+        else if (a === 0 && b === 1) c01++;
+        else if (a === 1 && b === 0) c10++;
+        else c11++;
+    }
+    const pTai = last === 1 ? c11 / (c10 + c11) : c01 / (c00 + c01);
+    const pred = pTai >= 0.5 ? 1 : 0;
+    const conf = Math.max(52, Math.min(94, Math.round(50 + Math.abs(pTai - 0.5) * 100)));
+    return { name: 'M1·MKOV1', pred, conf, weight: 0.10 };
+}
+function modelMarkov2(h) {
+    if (h.length < 3) return { name: 'M2·MKOV2', pred: -1, conf: 0, weight: 0.12 };
+    const s2 = `${h[1]}${h[0]}`;
+    const chrono = h.slice().reverse();
+    const m = { '00_0': 1, '00_1': 1, '01_0': 1, '01_1': 1, '10_0': 1, '10_1': 1, '11_0': 1, '11_1': 1 };
+    for (let i = 0; i < chrono.length - 2; i++) {
+        const key = `${chrono[i]}${chrono[i + 1]}_${chrono[i + 2]}`;
+        if (m[key] !== undefined) m[key]++;
+    }
+    const pTai = m[`${s2}_1`] / (m[`${s2}_0`] + m[`${s2}_1`]);
+    const pred = pTai >= 0.5 ? 1 : 0;
+    const conf = Math.max(52, Math.min(94, Math.round(50 + Math.abs(pTai - 0.5) * 100)));
+    return { name: 'M2·MKOV2', pred, conf, weight: 0.12 };
+}
+function modelPattern(h) {
+    const blocks = [];
+    let val = h[0], len = 1;
+    for (let i = 1; i < Math.min(24, h.length); i++) {
+        if (h[i] === val) len++;
+        else { blocks.push({ val, len }); val = h[i]; len = 1; }
+    }
+    blocks.push({ val, len });
+    const curLen = blocks[0].len, curSide = blocks[0].val;
+    let pTai = 0.5, note = 'CẦU ĐA BIẾN';
+    if (curLen === 1) {
+        let alt = 1;
+        for (let i = 1; i < blocks.length && blocks[i].len === 1; i++) alt++;
+        if (alt >= 3 && alt <= 4) { pTai = curSide === 1 ? 0.24 : 0.76; note = `SO LE ${alt}`; }
+        else if (alt >= 5) { pTai = curSide === 1 ? 0.65 : 0.35; note = 'SO LE 5+'; }
+        else if (blocks.length >= 2 && blocks[1].len === 2) { pTai = curSide === 1 ? 0.68 : 0.32; note = 'NHỊP 1-2'; }
+    } else if (curLen === 2) {
+        if (blocks.length >= 2 && blocks[1].len === 1) { pTai = curSide === 1 ? 0.26 : 0.74; note = 'NHỊP 2-1'; }
+        else { pTai = curSide === 1 ? 0.64 : 0.36; note = 'BỆT ĐÔI'; }
+    } else if (curLen === 3 || curLen === 4) { pTai = curSide === 1 ? 0.82 : 0.18; note = `BỆT ${curSide === 1 ? 'TÀI' : 'XỈU'} ${curLen}`; }
+    else if (curLen >= 5) { pTai = curSide === 1 ? 0.24 : 0.76; note = `BỆT ${curSide === 1 ? 'TÀI' : 'XỈU'} ${curLen} ĐẢO`; }
+    const pred = pTai >= 0.5 ? 1 : 0;
+    const conf = Math.max(52, Math.min(94, Math.round(50 + Math.abs(pTai - 0.5) * 100)));
+    return { name: 'M3·PATT', pred, conf, weight: 0.16, note };
+}
+function modelExtreme(h, raw) {
+    const r0 = raw[0] || {};
+    const sum0 = (r0.dice1 || 0) + (r0.dice2 || 0) + (r0.dice3 || 0);
+    let pTai = 0.5;
+    if (sum0 === 4) pTai = 0.15;
+    else if (sum0 === 15) pTai = 0.22;
+    else if (sum0 === 11) pTai = 0.76;
+    else if (sum0 === 10) pTai = 0.42;
+    else if (sum0 === 12) pTai = 0.58;
+    else return { name: 'M4·EXTR', pred: -1, conf: 0, weight: 0.08 };
+    const pred = pTai >= 0.5 ? 1 : 0;
+    const conf = Math.max(54, Math.min(92, Math.round(50 + Math.abs(pTai - 0.5) * 100)));
+    return { name: 'M4·EXTR', pred, conf, weight: 0.08 };
+}
+function modelFreq(h) {
+    let wT = 0, wAll = 0;
+    for (let i = 0; i < Math.min(14, h.length); i++) {
+        const w = Math.exp(-i / 6);
+        wAll += w;
+        if (h[i] === 1) wT += w;
+    }
+    const pTai = wAll > 0 ? wT / wAll : 0.5;
+    const pred = pTai >= 0.5 ? 1 : 0;
+    const conf = Math.max(52, Math.min(90, Math.round(50 + Math.abs(pTai - 0.5) * 100)));
+    return { name: 'M5·FREQ', pred, conf, weight: 0.08 };
+}
+function modelDiceMomentum(h, raw) {
+    let highD = 0, totD = 0;
+    raw.slice(0, 3).forEach(r => {
+        [r.dice1, r.dice2, r.dice3].forEach(d => { if (d >= 1 && d <= 6) { totD++; if (d >= 4) highD++; } });
+    });
+    const ratioHigh = totD > 0 ? highD / totD : 0.5;
+    const pTai = 1 - ratioHigh;
+    const pred = pTai >= 0.5 ? 1 : 0;
+    const conf = Math.max(52, Math.min(88, Math.round(50 + Math.abs(pTai - 0.5) * 100)));
+    return { name: 'M6·DICE', pred, conf, weight: 0.06 };
+}
+function modelMeanRev(h) {
+    const r12 = h.slice(0, 12).filter(x => x === 1).length / Math.min(12, h.length);
+    let pTai = 0.5;
+    if (r12 > 0.65) pTai = 0.35;
+    else if (r12 < 0.35) pTai = 0.65;
+    const pred = pTai >= 0.5 ? 1 : 0;
+    const conf = Math.max(52, Math.min(88, Math.round(50 + Math.abs(pTai - 0.5) * 100)));
+    return { name: 'M7·REVR', pred, conf, weight: 0.08 };
+}
+function modelEntropy(h) {
+    const ent = shannonEntropy(h);
+    if (ent >= 0.95) return { name: 'M8·ENTR', pred: -1, conf: 0, weight: 0.06 };
+    const last = h[0];
+    const r8 = h.slice(0, 8).filter(x => x === 1).length / Math.min(8, h.length);
+    const pTai = r8 >= 0.5 ? (last === 1 ? 0.62 : 0.38) : (last === 1 ? 0.62 : 0.38);
+    const pred = pTai >= 0.5 ? 1 : 0;
+    const conf = Math.max(52, Math.min(86, Math.round(50 + (1 - ent) * 40)));
+    return { name: 'M8·ENTR', pred, conf, weight: 0.06 };
+}
+function modelMeta(prev8) {
+    let sTai = 0, sXiu = 0, wSum = 0;
+    prev8.forEach(m => {
+        if (m.pred === -1) return;
+        const w = m.weight * (m.conf / 100);
+        if (m.pred === 1) sTai += w; else sXiu += w;
+        wSum += w;
+    });
+    if (wSum === 0) return { name: 'M9·META', pred: -1, conf: 0, weight: 0.20 };
+    const pTai = sTai / wSum;
+    const pred = pTai >= 0.5 ? 1 : 0;
+    const conf = Math.max(54, Math.min(94, Math.round(50 + Math.abs(pTai - 0.5) * 100)));
+    return { name: 'M9·META', pred, conf, weight: 0.20 };
+}
+function runNineModels(h, raw) {
+    const m1 = modelMarkov1(h);
+    const m2 = modelMarkov2(h);
+    const m3 = modelPattern(h);
+    const m4 = modelExtreme(h, raw);
+    const m5 = modelFreq(h);
+    const m6 = modelDiceMomentum(h, raw);
+    const m7 = modelMeanRev(h);
+    const m8 = modelEntropy(h);
+    const m9 = modelMeta([m1, m2, m3, m4, m5, m6, m7, m8]);
+    return [m1, m2, m3, m4, m5, m6, m7, m8, m9];
+}
+function ensembleVote(models) {
+    let taiCount = 0, xiuCount = 0, nullCount = 0;
+    let taiConf = 0, xiuConf = 0;
+    models.forEach(m => {
+        if (m.pred === 1) { taiCount++; taiConf += m.conf; }
+        else if (m.pred === 0) { xiuCount++; xiuConf += m.conf; }
+        else nullCount++;
+    });
+    const active = taiCount + xiuCount;
+    if (active < 5) return { pred: -1, agreement: 0, taiCount, xiuCount, nullCount, conf: 0 };
+    const pred = taiCount > xiuCount ? 1 : 0;
+    const maxCount = Math.max(taiCount, xiuCount);
+    const agreement = maxCount / 9;
+    const avgConf = (pred === 1 ? taiConf / Math.max(taiCount, 1) : xiuConf / Math.max(xiuCount, 1));
+    const finalConf = Math.round(avgConf * 0.6 + agreement * 100 * 0.4);
+    return { pred, agreement, taiCount, xiuCount, nullCount, conf: Math.max(52, Math.min(96, finalConf)) };
+}
+function decideState(ens, entropy) {
+    if (!ens || ens.pred === -1) return 'IDLE';
+    if (winStreak >= 6 || restCounter > 0) return 'REST';
+    if (lossStreak >= 3) return 'STOP';
+    if (ens.agreement < 0.55) return 'NEUTRAL';
+    if (entropy >= 0.98) return 'NEUTRAL';
+    return 'BET';
+}
+
+function buildUrl(base) {
+    if (!CFG.token) return base;
+    return base + (base.includes('?') ? '&' : '?') + CFG.token.replace(/^\?/, '');
+}
+async function fetchData() {
+    for (const u of [buildUrl(CFG.sessions), buildUrl(CFG.lite)]) {
+        try {
+            const res = await secureFetch(u, {}, 10000);
+            if (!res.ok) continue;
+            const data = await res.json();
+            const list = data.list || data.data || data.result || data.history || (Array.isArray(data) ? data : []);
+            if (Array.isArray(list) && list.length) return list;
+        } catch (e) {}
+    }
+    return null;
+}
+
+async function tick() {
+    if (_secLocked) return;
+    if (!isAuthenticated) return;
+    const list = await fetchData();
+    if (!list || !list.length) {
+        setStatus('Mất kết nối API', 'err');
+        return;
+    }
+    const latest = list[0];
+    const id = Number(latest.id || latest.sessionId || latest.round || 0);
+    if (!id) return;
+    const gears = list.slice(0, 45).map(resultOf);
+    const raw = list.slice(0, 45);
+
+    if (trackedSessionId !== 0 && id > trackedSessionId && currentPrediction !== -1) {
+        const prev = history[0];
+        if (prev && prev.actual == null) {
+            const actual = resultOf(latest);
+            prev.actual = actual;
+            prev.correct = (actual === prev.pred);
+            if (restCounter > 0) {
+                restCounter--;
+                if (restCounter === 0) winStreak = 0;
+            } else if (prev.wasBet) {
+                if (prev.correct) {
+                    wins++; winStreak++; lossStreak = 0;
+                    if (winStreak >= 6) restCounter = 2;
+                } else {
+                    loses++; lossStreak++; winStreak = 0;
+                }
+            } else {
+                if (prev.correct && lossStreak >= 3) lossStreak = 0;
+            }
+            saveState();
+        }
+    }
+
+    if (id > trackedSessionId || trackedSessionId === 0) {
+        trackedSessionId = id;
+        if (_tampered) {
+            setStatus('Lỗi bảo mật — dừng engine', 'err');
+            updatePanel(null, null, undefined, null, null, id);
+            return;
+        }
+        if (gears.length < 10) {
+            setStatus('Đang lấy dữ liệu...', 'warn');
+            updatePanel(null, null, undefined, null, null, id);
+            return;
+        }
+
+        const models = runNineModels(gears, raw);
+        const ens = ensembleVote(models);
+        const ent = shannonEntropy(gears);
+        const st = decideState(ens, ent);
+        const patternModel = models[2];
+        const pattern = patternModel.note || 'CẦU ĐA BIẾN';
+
+        if (ens.pred === -1) {
+            setStatus('Cầu nhiễu — chờ', 'warn');
+            updatePanel(ens, models, ent, st, pattern, id);
+            return;
+        }
+
+        currentPrediction = ens.pred;
+        setStatus('API online · engine active');
+
+        if (!history[0] || history[0].id !== id) {
+            history.unshift({ id, pred: ens.pred, actual: null, correct: null, wasBet: st === 'BET' });
+            if (history.length > 150) history.length = 150;
+            saveState();
+        }
+
+        updatePanel(ens, models, ent, st, pattern, id);
+    } else {
+        setStatus('API online · chờ phiên mới');
+    }
+}
+
+/* ============================================================
+   REALTIME KEY WATCHER
+   Admin xóa/ban/reset → user văng trong < 1s qua SSE Firebase
+   ============================================================ */
+let _kw = null;
+
+function startKeyWatcher() {
+    if (_kw && _kw.active) return;
+    _kw = { active: true, ctrl: null, timer: null };
+    _kwLoop();
+}
+
+async function _kwLoop() {
+    if (!_kw || !_kw.active || !isAuthenticated || !authInfo) return;
+    const url = FIREBASE_URL + '/' + PATH_TX_KEYS + '/' + encodeURIComponent(authInfo.key) + '.json';
+    _kw.ctrl = new AbortController();
+    try {
+        const res = await fetch(url, {
+            headers: { 'Accept': 'text/event-stream' },
+            cache: 'no-store',
+            signal: _kw.ctrl.signal
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buf = '', evType = null, evData = null;
+        while (_kw && _kw.active) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            buf += decoder.decode(value, { stream: true });
+            let nl;
+            while ((nl = buf.indexOf('\n')) >= 0) {
+                const line = buf.slice(0, nl).replace(/\r$/, '');
+                buf = buf.slice(nl + 1);
+                if (line === '') {
+                    if (evType && evData !== null) _kwHandle(evType, evData);
+                    evType = null; evData = null; continue;
+                }
+                if (line.startsWith(':')) continue;
+                if (line.startsWith('event:')) evType = line.slice(6).trim();
+                else if (line.startsWith('data:')) {
+                    const d = line.slice(5).trim();
+                    try { evData = JSON.parse(d); } catch { evData = d; }
+                }
+            }
+            if (!isAuthenticated) break;
+        }
+    } catch (e) {
+        if (e.name === 'AbortError') return;
+    }
+    if (_kw && _kw.active && isAuthenticated) {
+        _kw.timer = setTimeout(_kwLoop, 2000);
+    }
+}
+
+function _kwHandle(type, data) {
+    if (type === 'keep-alive') return;
+    if (type === 'put') {
+        const kd = data.data;
+        if (kd === null || kd === undefined) return forceLogout('Key đã bị xóa khỏi hệ thống');
+        if (typeof kd !== 'object') return;
+        if (kd.banned === true) return forceLogout('Key đã bị BAN' + (kd.banned_reason ? ': ' + kd.banned_reason : ''));
+        if (kd.hwid !== getTxHWID()) return forceLogout('HWID đã bị reset — đăng nhập lại');
+        const exp = Number(kd.expires_at) || 0;
+        if (exp > 0 && exp < Date.now()) return forceLogout('Key đã hết hạn');
+    } else if (type === 'patch') {
+        _kwRefetch();
+    }
+}
+
+let _kwRefetchTimer = null;
+function _kwRefetch() {
+    clearTimeout(_kwRefetchTimer);
+    _kwRefetchTimer = setTimeout(async () => {
+        if (!isAuthenticated || !authInfo) return;
+        try {
+            const url = FIREBASE_URL + '/' + PATH_TX_KEYS + '/' + encodeURIComponent(authInfo.key) + '.json';
+            const res = await secureFetch(url, {}, 5000);
+            if (!res.ok) return;
+            const kd = await res.json();
+            if (!kd || typeof kd !== 'object') return forceLogout('Key đã bị xóa khỏi hệ thống');
+            if (kd.banned === true) return forceLogout('Key đã bị BAN' + (kd.banned_reason ? ': ' + kd.banned_reason : ''));
+            if (kd.hwid !== getTxHWID()) return forceLogout('HWID đã bị reset — đăng nhập lại');
+            const exp = Number(kd.expires_at) || 0;
+            if (exp > 0 && exp < Date.now()) return forceLogout('Key đã hết hạn');
+        } catch (e) {}
+    }, 200);
+}
+
+function forceLogout(reason) {
+    if (_kw) {
+        _kw.active = false;
+        if (_kw.ctrl) try { _kw.ctrl.abort(); } catch (e) {}
+        if (_kw.timer) clearTimeout(_kw.timer);
+        _kw = null;
+    }
+    LS.del(_0x4a.sk);
+    LS.del(LS_KEY + '_state');
+    isAuthenticated = false;
+    authInfo = null;
+    if (engineInterval) { clearInterval(engineInterval); engineInterval = null; }
+    const panel = $('ai-panel');
+    if (panel) {
+        panel.innerHTML = `<div style="padding:24px;text-align:center;color:#ff3d7f;font-family:monospace;font-size:13px;letter-spacing:1px;background:#1a0d16;border-radius:14px;border:1px solid #ff3d7f;line-height:1.6;">
+            ⛔ ĐÃ BỊ ĐĂNG XUẤT<br>
+            <span style="color:#aaa;font-size:11px;display:block;margin-top:10px;">${reason}</span>
+            <button onclick="location.reload()" style="margin-top:18px;padding:10px 20px;background:#ff3d7f;color:#fff;border:none;border-radius:6px;font:700 12px monospace;cursor:pointer;letter-spacing:1px;">ĐĂNG NHẬP LẠI</button>
+        </div>`;
+        panel.classList.add('on');
+    }
+    $('btn-toggle-ai').classList.add('open');
+    setTimeout(() => { location.reload(); }, 4000);
+}
+
+/* ============================================================
+   INIT APP (IIFE — chạy ngay khi script load)
+   ============================================================ */
+(async function initApp() {
+    try {
+        gameFrame.src = CFG.gameUrl;
+        initDrag();
+
+        const saved = getSavedAuth();
+        if (saved) {
+            try {
+                const hwid = getTxHWID();
+                const fb = await validateAgainstFirebase(saved.key, hwid);
+                if (!fb.ok) {
+                    LS.del(_0x4a.sk);
+                    setStatus(fb.msg || 'Không xác minh được Key trên Firebase.', 'err');
+                    openLoginModal();
+                    engineInterval = setInterval(tick, 1800);
+                    return;
+                }
+            } catch (e) {
+                LS.del(_0x4a.sk);
+                setStatus('Không xác minh được Key. Xác thực bị từ chối khi offline.', 'err');
+                openLoginModal();
+                engineInterval = setInterval(tick, 1800);
+                return;
+            }
+
+            authInfo = saved;
+            isAuthenticated = true;
+            $('ai-panel').classList.add('on');
+            $('btn-toggle-ai').classList.add('open');
+
+            if (!betMode) {
+                showModeModal();
+            } else {
+                updatePanel(null, null, undefined, null, null, trackedSessionId);
+            }
+            startKeyWatcher();
+            tick();
+        } else {
+            setStatus('Chưa kích hoạt key', 'warn');
+            openLoginModal();
+        }
+
+        engineInterval = setInterval(tick, 1800);
+    } catch (err) {
+        console.error('[INIT ERROR]', err);
+        try { setStatus('Lỗi khởi động: ' + err.message, 'err'); } catch (_) {}
+        try { openLoginModal(); } catch (_) {}
+    }
+})();
+
+window.addEventListener('beforeunload', () => {
+    if (engineInterval) clearInterval(engineInterval);
+    if (_kw && _kw.ctrl) try { _kw.ctrl.abort(); } catch (e) {}
+});
+
+/* FALLBACK: nếu sau 2.5s vẫn chưa có modal login và chưa auth → force mở */
+setTimeout(() => {
+    try {
+        const lm = $('loginModal');
+        if (lm && lm.style.display !== 'flex' && !isAuthenticated) {
+            console.warn('[FALLBACK] Force mở login modal');
+            setStatus('Chưa kích hoạt key', 'warn');
+            openLoginModal();
+        }
+    } catch (e) { console.error('[FALLBACK ERROR]', e); }
+}, 2500);
+</script>
+</body>
+</html>
